@@ -32,6 +32,8 @@
         <fragment
             android:id="@+id/category_list_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:name="com.example.razor.ejevika.fragments.CategoryListFragment"
+            tools:layout="@layout/category_list_fragment" />
     </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>
