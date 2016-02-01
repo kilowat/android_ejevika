@@ -39,4 +39,8 @@ public class VolleySingleton {
             mInstance = new VolleySingleton();
         return mInstance;
     }
+
+    public ImageLoader getImageLoader() {
+        return mImageLoader;
+    }
 }

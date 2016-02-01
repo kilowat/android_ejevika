@@ -25,7 +25,6 @@ public class CategoryListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.category_list_fragment, container, false);
-
         return v;
     }
 
