@@ -10,6 +10,7 @@ public class Category {
     public String name;
 
     public Category(){}
+
     public Category(int id, String picture, String name){
         this.id = id;
         this.picture = picture;
