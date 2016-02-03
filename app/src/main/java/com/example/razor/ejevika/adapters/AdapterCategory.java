@@ -2,11 +2,15 @@ package com.example.razor.ejevika.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.example.razor.ejevika.R;
 import com.example.razor.ejevika.dummy.Category;
 import com.example.razor.ejevika.network.VolleySingleton;
 
@@ -35,12 +39,16 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHo
     }
 
     @Override
-    public AdapterCategory.ViewHolderCategory onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    public ViewHolderCategory onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.category_recycler_item, parent, false);
+        ViewHolderCategory vh = new ViewHolderCategory(view);
+        return vh;
     }
 
     @Override
-    public void onBindViewHolder(AdapterCategory.ViewHolderCategory holder, int position) {
+    public void onBindViewHolder(ViewHolderCategory holder, int position) {
+        Category category = mCateogries.get(position);
+        holder.categoryName.setText(category.getName());
 
     }
 
@@ -50,8 +58,13 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHo
     }
     static class ViewHolderCategory extends RecyclerView.ViewHolder{
 
+        public TextView categoryName;
+        public ImageView categoryPicture;
+
         public ViewHolderCategory(View itemView) {
             super(itemView);
+            categoryName = (TextView) itemView.findViewById(R.id.category_name);
+            categoryPicture = (ImageView) itemView.findViewById(R.id.category_picture);
         }
     }
 }
