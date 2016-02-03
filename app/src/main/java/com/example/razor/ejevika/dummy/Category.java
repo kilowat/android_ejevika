@@ -5,7 +5,7 @@ package com.example.razor.ejevika.dummy;
  */
 public class Category {
 
-    public int id;
+    public long id;
     public String picture;
     public String name;
 
@@ -13,13 +13,13 @@ public class Category {
 
     public Category(){}
 
-    public Category(int id, String picture, String name){
+    public Category(long id, String picture, String name){
         this.id = id;
         this.picture = picture;
         this.name = name;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -31,7 +31,7 @@ public class Category {
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
