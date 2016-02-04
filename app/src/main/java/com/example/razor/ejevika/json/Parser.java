@@ -22,7 +22,7 @@ public class Parser {
      * @param resopnse
      * @return
      */
-    public static ArrayList<Category> parseCategoryJSON(JSONArray resopnse) throws JSONException {
+    public static ArrayList<Category> parseCategoryJSON(JSONArray resopnse){
         ArrayList<Category> categories = new ArrayList<>();
         if (resopnse != null && resopnse.length() > 0) {
             try {

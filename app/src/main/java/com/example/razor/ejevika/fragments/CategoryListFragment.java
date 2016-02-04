@@ -14,10 +14,12 @@ import android.widget.TextView;
 import com.example.razor.ejevika.MyApplication;
 import com.example.razor.ejevika.R;
 import com.example.razor.ejevika.adapters.AdapterCategory;
+import com.example.razor.ejevika.callbacks.CategoryLoadListener;
 import com.example.razor.ejevika.dummy.Category;
 import com.example.razor.ejevika.json.Parser;
 import com.example.razor.ejevika.json.Requestor;
 import com.example.razor.ejevika.network.VolleySingleton;
+import com.example.razor.ejevika.tasks.TaskLoadCategory;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,7 +33,7 @@ import static com.example.razor.ejevika.extras.Keys.EndpointCategory.KEY_PICTURE
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CategoryListFragment extends Fragment {
+public class CategoryListFragment extends Fragment implements CategoryLoadListener {
 
     public AdapterCategory adapterCategory;
     public RecyclerView recyclerView;
@@ -56,8 +58,12 @@ public class CategoryListFragment extends Fragment {
         ArrayList<Category> expected = new ArrayList<>();
         expected.add(new Category(id, picture, name));
         adapterCategory.setCategories(expected);
-
+        new TaskLoadCategory(this).execute();
         return v;
     }
 
+    @Override
+    public void onCategoriesLoadComplite(ArrayList<Category> categories) {
+        Log.d("test",categories.get(0).toString());
+    }
 }
