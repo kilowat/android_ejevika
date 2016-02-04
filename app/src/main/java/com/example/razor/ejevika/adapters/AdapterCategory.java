@@ -22,7 +22,7 @@ import java.util.zip.Inflater;
  */
 public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHolderCategory> {
 
-    private ArrayList<Category> mCateogries = new ArrayList<>();
+    private ArrayList<Category> mCateogries;
     private VolleySingleton mVolleySinleton;
     private ImageLoader mImageLoader;
     private LayoutInflater mInflater;
@@ -31,11 +31,14 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHo
         mInflater = LayoutInflater.from(context);
         mVolleySinleton = VolleySingleton.getInstance();
         mImageLoader = mVolleySinleton.getImageLoader();
+
     }
 
     public void setCategories(ArrayList<Category> categories){
         this.mCateogries = categories;
         notifyDataSetChanged();
+
+
     }
 
     @Override
@@ -54,7 +57,7 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHo
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mCateogries.size();
     }
     static class ViewHolderCategory extends RecyclerView.ViewHolder{
 

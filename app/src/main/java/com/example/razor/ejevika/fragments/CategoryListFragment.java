@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.example.razor.ejevika.R;
 import com.example.razor.ejevika.adapters.AdapterCategory;
 import com.example.razor.ejevika.dummy.Category;
 import com.example.razor.ejevika.json.Parser;
+import com.example.razor.ejevika.json.Requestor;
+import com.example.razor.ejevika.network.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,7 +45,6 @@ public class CategoryListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.category_list_fragment, container, false);
-
         recyclerView = (RecyclerView) v.findViewById(R.id.category_list_recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),4));
         adapterCategory = new AdapterCategory(getActivity());
@@ -54,6 +56,7 @@ public class CategoryListFragment extends Fragment {
         ArrayList<Category> expected = new ArrayList<>();
         expected.add(new Category(id, picture, name));
         adapterCategory.setCategories(expected);
+
         return v;
     }
 
