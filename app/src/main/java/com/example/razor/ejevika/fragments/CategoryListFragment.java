@@ -57,7 +57,7 @@ public class CategoryListFragment extends Fragment implements CategoryLoadListen
 
         ArrayList<Category> expected = new ArrayList<>();
         expected.add(new Category(id, picture, name));
-        adapterCategory.setCategories(expected);
+
         new TaskLoadCategory(this).execute();
         return v;
     }
