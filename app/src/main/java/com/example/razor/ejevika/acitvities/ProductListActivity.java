@@ -17,7 +17,7 @@ public class ProductListActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int idCategory = getIntent().getIntExtra(CategoryListFragment.ID_CATEGORY,0);
+        long idCategory = getIntent().getLongExtra(CategoryListFragment.ID_CATEGORY,0);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ProductListFragment fragment = ProductListFragment.newInstance(idCategory);
         ft.replace(R.id.content,fragment);

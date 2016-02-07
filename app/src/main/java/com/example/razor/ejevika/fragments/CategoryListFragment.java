@@ -85,7 +85,7 @@ public class CategoryListFragment extends Fragment implements CategoryLoadListen
         return v;
     }
 
-    public void showProductListFragment(int index){
+    public void showProductListFragment(long index){
         Intent intent = new Intent(getActivity(),ProductListActivity.class);
         intent.putExtra(ID_CATEGORY, index);
         startActivity(intent);
@@ -130,7 +130,9 @@ public class CategoryListFragment extends Fragment implements CategoryLoadListen
 
     @Override
     public void onItemClick(View childView, int position) {
-        showProductListFragment(position);
+        Category category = adapterCategory.getCategory(position);
+        long categoryId = category.getId();
+        showProductListFragment(categoryId);
     }
 
     @Override

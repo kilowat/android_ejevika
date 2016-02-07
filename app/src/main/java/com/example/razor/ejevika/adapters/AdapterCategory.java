@@ -35,7 +35,17 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHo
         mImageLoader = mVolleySinleton.getImageLoader();
 
     }
-
+    public Category getCategory(int positon){
+        Category category = new Category();
+        if(mCateogries.size()>0){
+            try {
+                category = mCateogries.get(positon);
+            }catch (ArrayIndexOutOfBoundsException e){
+                Log.e("test", e.getMessage());
+            }
+        }
+        return category;
+    }
     public void setCategories(ArrayList<Category> categories){
         this.mCateogries = categories;
         notifyDataSetChanged();

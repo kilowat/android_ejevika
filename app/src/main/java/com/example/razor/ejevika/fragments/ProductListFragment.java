@@ -39,7 +39,7 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.framgent_product_list, container, false);
         Bundle args = getArguments();
-        int index = args.getInt(INDEX);
+        long index = args.getLong(INDEX);
         TextView text = (TextView) v.findViewById(R.id.product_text);
         text.setText("item " + index);
         //new TaskLoadProduct(this).execute();
@@ -47,10 +47,10 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
         return v;
     }
 
-    public static ProductListFragment newInstance(int index) {
+    public static ProductListFragment newInstance(long index) {
         ProductListFragment fragment = new ProductListFragment();
         Bundle args = new Bundle();
-        args.putInt(INDEX, index);
+        args.putLong(INDEX, index);
         fragment.setArguments(args);
         return fragment;
     }
