@@ -3,6 +3,7 @@ package com.example.razor.ejevika.extras;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
+import com.example.razor.ejevika.MyApplication;
 import com.example.razor.ejevika.dummy.Category;
 import com.example.razor.ejevika.json.Parser;
 import com.example.razor.ejevika.json.Requestor;
@@ -20,7 +21,7 @@ public class CategoryUtils {
     public static ArrayList<Category> loadCategories(RequestQueue requestQueue){
        JSONArray requestResult =  Requestor.categoryRequest(requestQueue, URL_CATEGORY_ALL);
         ArrayList<Category> categories = Parser.parseCategoryJSON(requestResult);
-
+        MyApplication.getWritableDatabase().insertCategories(categories, true);
         return categories;
     }
 }

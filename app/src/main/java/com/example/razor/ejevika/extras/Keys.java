@@ -10,5 +10,7 @@ public interface Keys {
         public static final String KEY_ID = "ID";
         public static final String KEY_NAME = "NAME";
         public static final String KEY_PICTURE = "PICTURE";
+        public static final String KEY_SECTION_ID = "IBLOCK_SECTION_ID";
+        public static final String KEY_PRICE = "PRICE";
     }
 }

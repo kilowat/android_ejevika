@@ -1,69 +1,140 @@
 package com.example.razor.ejevika.fragments;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.razor.ejevika.MyApplication;
 import com.example.razor.ejevika.R;
+import com.example.razor.ejevika.acitvities.ProductListActivity;
 import com.example.razor.ejevika.adapters.AdapterCategory;
 import com.example.razor.ejevika.callbacks.CategoryLoadListener;
+import com.example.razor.ejevika.database.DBEjevika;
 import com.example.razor.ejevika.dummy.Category;
-import com.example.razor.ejevika.json.Parser;
+import com.example.razor.ejevika.extras.CategoryUtils;
 import com.example.razor.ejevika.json.Requestor;
+import com.example.razor.ejevika.listeners.RecyclerItemClickListener;
+import com.example.razor.ejevika.loaders.LoaderCategory;
 import com.example.razor.ejevika.network.VolleySingleton;
 import com.example.razor.ejevika.tasks.TaskLoadCategory;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import static com.example.razor.ejevika.extras.Keys.EndpointCategory.KEY_ID;
-import static com.example.razor.ejevika.extras.Keys.EndpointCategory.KEY_NAME;
-import static com.example.razor.ejevika.extras.Keys.EndpointCategory.KEY_PICTURE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CategoryListFragment extends Fragment implements CategoryLoadListener {
+public class CategoryListFragment extends Fragment implements CategoryLoadListener,
+        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener,
+        RecyclerItemClickListener.OnItemClickListener
+{
 
     public AdapterCategory adapterCategory;
     public RecyclerView recyclerView;
+    public static final int CATEGORY_ITEM_COUNT = 3;
+    public static final String REFRES_TAG = "refresh_tag";
+    public static final String ID_CATEGORY = "id_category";
+    public SwipeRefreshLayout swipeRefreshLayout;
+    public RecyclerItemClickListener recyclerItemClickListener;
+
 
     public CategoryListFragment() {
         // Required empty public constructor
     }
 
+    public CategoryListFragment newInstance(){
+        CategoryListFragment fragment = new CategoryListFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.category_list_fragment, container, false);
+        View v = inflater.inflate(R.layout.fragment_category_list, container, false);
         recyclerView = (RecyclerView) v.findViewById(R.id.category_list_recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),4));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),CATEGORY_ITEM_COUNT));
         adapterCategory = new AdapterCategory(getActivity());
+        recyclerItemClickListener = new RecyclerItemClickListener(getActivity(), this);
+
+
         recyclerView.setAdapter(adapterCategory);
-        int id = 1;
-        String name = "Салаты";
-        String picture = "/upload/iblock/5f7/5f729baedbe28701b63ff88f0e020dd4.jpg";
+        recyclerView.addOnItemTouchListener(recyclerItemClickListener);
+        swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeCategories);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
-        ArrayList<Category> expected = new ArrayList<>();
-        expected.add(new Category(id, picture, name));
+       // MyApplication.getWritableDatabase().resetTables();
 
-        new TaskLoadCategory(this).execute();
+        getLoaderManager().initLoader(0, savedInstanceState,this).forceLoad();
         return v;
     }
 
+    public void showProductListFragment(int index){
+        Intent intent = new Intent(getActivity(),ProductListActivity.class);
+        intent.putExtra(ID_CATEGORY, index);
+        startActivity(intent);
+    }
+
+    /*
+    * Call when loading categories from remote server
+    * */
     @Override
     public void onCategoriesLoadComplite(ArrayList<Category> categories) {
-        Log.d("test",categories.get(0).toString());
+        if(swipeRefreshLayout.isRefreshing()){
+            swipeRefreshLayout.setRefreshing(false);
+        }
+        adapterCategory.setCategories(categories);
+    }
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        return new LoaderCategory(MyApplication.getAppContext());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+      ArrayList<Category> categories = DBEjevika.getCategoriesFromCursor(data);
+        if(categories.isEmpty()){
+            new TaskLoadCategory(this).execute();
+        }else {
+            adapterCategory.setCategories(categories);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+
+    }
+    @Override
+    public void onRefresh() {
+        Log.d(REFRES_TAG, "refresh run");
+        new TaskLoadCategory(this).execute();
+    }
+
+    @Override
+    public void onItemClick(View childView, int position) {
+        showProductListFragment(position);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
     }
 }

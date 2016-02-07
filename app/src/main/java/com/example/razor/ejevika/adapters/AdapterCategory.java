@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.razor.ejevika.R;
 import com.example.razor.ejevika.dummy.Category;
 import com.example.razor.ejevika.network.VolleySingleton;
-
+import static com.example.razor.ejevika.extras.Constants.NA;
+import static com.example.razor.ejevika.extras.UrlEndPoints.*;
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
@@ -22,7 +24,7 @@ import java.util.zip.Inflater;
  */
 public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHolderCategory> {
 
-    private ArrayList<Category> mCateogries;
+    private ArrayList<Category> mCateogries = new ArrayList<>();
     private VolleySingleton mVolleySinleton;
     private ImageLoader mImageLoader;
     private LayoutInflater mInflater;
@@ -38,7 +40,6 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHo
         this.mCateogries = categories;
         notifyDataSetChanged();
 
-
     }
 
     @Override
@@ -52,6 +53,8 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHo
     public void onBindViewHolder(ViewHolderCategory holder, int position) {
         Category category = mCateogries.get(position);
         holder.categoryName.setText(category.getName());
+        String urlThubnail = URL_HOST+category.getPicture();
+        imageLoad(urlThubnail, holder);
 
     }
 
@@ -59,7 +62,24 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHo
     public int getItemCount() {
         return mCateogries.size();
     }
-    static class ViewHolderCategory extends RecyclerView.ViewHolder{
+
+    private void imageLoad(String urlThubnail, final ViewHolderCategory viewHolderCategory){
+        if(!urlThubnail.equals(NA)) {
+            mImageLoader.get(urlThubnail, new ImageLoader.ImageListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    viewHolderCategory.categoryPicture.setImageBitmap(response.getBitmap());
+                }
+            });
+        }
+    }
+
+     class ViewHolderCategory extends RecyclerView.ViewHolder {
 
         public TextView categoryName;
         public ImageView categoryPicture;
@@ -68,6 +88,10 @@ public class AdapterCategory extends RecyclerView.Adapter<AdapterCategory.ViewHo
             super(itemView);
             categoryName = (TextView) itemView.findViewById(R.id.category_name);
             categoryPicture = (ImageView) itemView.findViewById(R.id.category_picture);
+
         }
+
+
     }
+
 }

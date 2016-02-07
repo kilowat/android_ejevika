@@ -5,9 +5,9 @@ package com.example.razor.ejevika.dummy;
  */
 public class Category {
 
-    public long id;
-    public String picture;
-    public String name;
+    private long id;
+    private String picture;
+    private String name;
 
 
 
