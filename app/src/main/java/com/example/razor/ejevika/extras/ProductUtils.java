@@ -11,15 +11,16 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
-import static com.example.razor.ejevika.extras.UrlEndPoints.URL_CATEGORY_ALL;
-import static com.example.razor.ejevika.extras.UrlEndPoints.URL_PRODUCT_ALL;
+import static com.example.razor.ejevika.extras.UrlEndPoints.*;
+
 
 /**
  * Created by razor on 07.02.2016.
  */
 public class ProductUtils {
-    public static ArrayList<Product> loadProducts(RequestQueue requestQueue){
-        JSONArray requestResult =  Requestor.productRequset(requestQueue, URL_PRODUCT_ALL);
+
+    public static ArrayList<Product> loadProducts(RequestQueue requestQueue, long categoryId){
+        JSONArray requestResult =  Requestor.productRequset(requestQueue, URL_PRODUCT_SECTION+categoryId);
         ArrayList<Product> products = Parser.parseProductJSON(requestResult);
         MyApplication.getWritableDatabase().insertProduct(products, true);
         return products;

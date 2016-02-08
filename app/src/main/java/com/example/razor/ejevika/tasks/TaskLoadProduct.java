@@ -18,18 +18,21 @@ import java.util.ArrayList;
 public class TaskLoadProduct extends AsyncTask<Void,Void,ArrayList<Product>> {
 
     private ProductLoadListener listener;
-    private RequestQueue requestQueue;
-    private VolleySingleton volleySingelton;
+    private RequestQueue requestQueue = VolleySingleton.getInstance().getmRequestQueue();
+    private long categoryId = -1;
 
     public TaskLoadProduct(ProductLoadListener listener){
         this.listener = listener;
-        volleySingelton = VolleySingleton.getInstance();
-        requestQueue = volleySingelton.getmRequestQueue();
+     }
+
+    public TaskLoadProduct(ProductLoadListener listener, long categoryId){
+        this.listener = listener;
+        this.categoryId = categoryId;
     }
 
     @Override
     protected ArrayList<Product> doInBackground(Void... params) {
-        ArrayList<Product> products = ProductUtils.loadProducts(requestQueue);
+        ArrayList<Product> products = ProductUtils.loadProducts(requestQueue, categoryId);
         return products;
     }
 

@@ -80,8 +80,11 @@ public class Parser {
                     if(Utils.contains(currentPoduct, KEY_PICTURE)){
                         picture = currentPoduct.getString(KEY_PICTURE);
                     }
+                    if(Utils.contains(currentPoduct, KEY_PRICE)){
+                        price = currentPoduct.getDouble(KEY_PRICE);
+                    }
                     if(Utils.contains(currentPoduct, KEY_SECTION_ID)){
-                        sectionId = currentPoduct.getLong(KEY_PRICE);
+                        sectionId = currentPoduct.getLong(KEY_SECTION_ID);
                     }
                    if(id!=-1 && !name.equals(NA) && sectionId!=-1){
                        Product product = new Product(id, name, picture, sectionId, price);

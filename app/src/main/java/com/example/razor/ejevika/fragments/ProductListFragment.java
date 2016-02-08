@@ -3,6 +3,8 @@ package com.example.razor.ejevika.fragments;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.Volley;
 import com.example.razor.ejevika.R;
+import com.example.razor.ejevika.adapters.AdapterProduct;
 import com.example.razor.ejevika.callbacks.ProductLoadListener;
 import com.example.razor.ejevika.dummy.Product;
 import com.example.razor.ejevika.extras.CategoryUtils;
@@ -34,15 +37,22 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     @Nullable
 
     public static final String INDEX = "index";
+    public int countInRow = 3;
+    protected AdapterProduct adapterProduct;
+    protected RecyclerView recyclerView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.framgent_product_list, container, false);
         Bundle args = getArguments();
         long index = args.getLong(INDEX);
-        TextView text = (TextView) v.findViewById(R.id.product_text);
-        text.setText("item " + index);
-        //new TaskLoadProduct(this).execute();
+
+        recyclerView = (RecyclerView) v.findViewById(R.id.products_list_recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),countInRow));
+        adapterProduct = new AdapterProduct(getActivity());
+        recyclerView.setAdapter(adapterProduct);
+        new TaskLoadProduct(this, index).execute();
 
         return v;
     }
@@ -57,6 +67,6 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
 
     @Override
     public void onProductsLoadComplite(ArrayList<Product> products) {
-
+        adapterProduct.setProducts(products);
     }
 }

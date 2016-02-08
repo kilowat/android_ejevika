@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ccc">
-    <TextView
-        android:id="@+id/product_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="this is product list"/>
+    android:layout_height="match_parent">
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipeProducts">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/products_list_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>
