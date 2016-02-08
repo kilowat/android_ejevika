@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class LoaderCategory extends CursorLoader {
 
-    public static final int LOADER_ID = 1;
+    public static final int LOADER_CATEGORY_ID = 1;
 
     public LoaderCategory(Context context) {
         super(context);

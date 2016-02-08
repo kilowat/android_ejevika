@@ -41,8 +41,8 @@ public class DBEjevika {
             Category category = categories.get(i);
             sqLiteStatement.clearBindings();
             sqLiteStatement.bindLong(1, category.getId());
-            sqLiteStatement.bindString(2,category.getPicture());
-            sqLiteStatement.bindString(3,category.getName());
+            sqLiteStatement.bindString(2, category.getPicture());
+            sqLiteStatement.bindString(3, category.getName());
 
             sqLiteStatement.execute();
         }
@@ -65,7 +65,7 @@ public class DBEjevika {
             sqLiteStatement.clearBindings();
             sqLiteStatement.bindLong(1, product.getId());
             sqLiteStatement.bindString(2, product.getName());
-            sqLiteStatement.bindString(3,product.getPicture());
+            sqLiteStatement.bindString(3, product.getPicture());
             sqLiteStatement.bindLong(4, product.getSectionId());
             sqLiteStatement.bindDouble(5, product.getPrice());
             sqLiteStatement.execute();
@@ -80,6 +80,20 @@ public class DBEjevika {
         Cursor cursor = sqLiteDatabase.query(EjevikaHelper.TABLE_CATEGORIES,null,null,null,null,null,null);
         return cursor;
     }
+
+    public Cursor readProduct(long sectionId){
+        String where = EjevikaHelper.COLUMN_SECTION_ID_PRODUCT+"=?";
+        if(sectionId==-1)
+            where = null;
+        Cursor cursor = sqLiteDatabase.query(EjevikaHelper.TABLE_PRODUCT,
+                null,where,
+                new String[]{String.valueOf(sectionId)},
+                null,
+                null,
+                null);
+        return cursor;
+    }
+
     public static ArrayList<Category>  getCategoriesFromCursor(Cursor cursor) {
         ArrayList<Category> categories = new ArrayList<>();
         if (cursor.getCount() > 0) {
@@ -96,12 +110,31 @@ public class DBEjevika {
         }
         return categories;
     }
+
+    public static ArrayList<Product> getProductsFromCursor(Cursor cursor){
+        ArrayList<Product> products = new ArrayList<>();
+        if(cursor.getCount()>0){
+            cursor.moveToFirst();
+            do{
+                long id = cursor.getLong(cursor.getColumnIndex(EjevikaHelper.COLUMN_ID));
+                String name = cursor.getString(cursor.getColumnIndex(EjevikaHelper.COLUMN_NAME_PRODUCT));
+                String picture = cursor.getString(cursor.getColumnIndex(EjevikaHelper.COLUMN_PICTURE_PRODUCT));
+                long sectionId = cursor.getLong(cursor.getColumnIndex(EjevikaHelper.COLUMN_SECTION_ID_PRODUCT));
+                double price = cursor.getDouble(cursor.getColumnIndex(EjevikaHelper.COLUMN_PRICE_PRODUCT));
+                products.add(new Product(id, name, picture, sectionId, price));
+            }while (cursor.moveToNext());
+        }
+        return products;
+    }
+
     private void deleteCategories() {
         sqLiteDatabase.delete(EjevikaHelper.TABLE_CATEGORIES,null,null);
     }
+
     private void deleteProducts() {
         sqLiteDatabase.delete(EjevikaHelper.TABLE_PRODUCT,null,null);
     }
+
     public void resetTables(){
         try {
             sqLiteDatabase.execSQL(EjevikaHelper.DROP_TABLE_CATEGORIES);
@@ -123,12 +156,10 @@ public class DBEjevika {
         public static final String COLUMN_ID = "_id";
         public static final String COLUMN_NAME_CATEGORY = "name_category";
         public static final String COLUMN_PICTURE_CATEGORY = "picture_category";
-
         public static final String CREATE_CATEGORIES_TABLE = "CREATE TABLE "+TABLE_CATEGORIES+" ("+
                 COLUMN_ID+" INTEGER, "+
                 COLUMN_NAME_CATEGORY+ " TEXT, "+
                 COLUMN_PICTURE_CATEGORY+ " TEXT);";
-
         public static final String DROP_TABLE_CATEGORIES = "DROP TABLE IF EXISTS "+TABLE_CATEGORIES;
 /**************************Prpduct table********************************************/
         public static final String TABLE_PRODUCT = "products";
@@ -136,15 +167,13 @@ public class DBEjevika {
         public static final String COLUMN_PICTURE_PRODUCT = "picture_product";
         public static final String COLUMN_PRICE_PRODUCT = "price_product";
         public static final String COLUMN_SECTION_ID_PRODUCT = "section_id_product";
-
         public static final String CREATE_PRODUCTS_TABLE = "CREATE TABLE "+TABLE_PRODUCT+" ("+
-                COLUMN_ID+ "INTEGER, "+
+                COLUMN_ID+ " INTEGER, "+
                 COLUMN_NAME_PRODUCT+" TEXT, "+
                 COLUMN_PICTURE_PRODUCT+" TEXT, "+
                 COLUMN_SECTION_ID_PRODUCT+" INTEGER, "+
                 COLUMN_PRICE_PRODUCT+" INTEGER);";
         public static final String DROP_TABLE_PRODUCTS = "DROP TABLE IF EXISTS "+TABLE_PRODUCT;
-
 /**********************************************************************************/
         private static final String DB_NAME = "ejevika_db";
         private static final int DB_VERSION = 1;

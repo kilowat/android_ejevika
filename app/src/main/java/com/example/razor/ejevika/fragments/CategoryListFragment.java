@@ -31,7 +31,7 @@ import com.example.razor.ejevika.listeners.RecyclerItemClickListener;
 import com.example.razor.ejevika.loaders.LoaderCategory;
 import com.example.razor.ejevika.network.VolleySingleton;
 import com.example.razor.ejevika.tasks.TaskLoadCategory;
-
+import static com.example.razor.ejevika.loaders.LoaderCategory.LOADER_CATEGORY_ID;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class CategoryListFragment extends Fragment implements CategoryLoadListen
 
        // MyApplication.getWritableDatabase().resetTables();
 
-        getLoaderManager().initLoader(0, savedInstanceState,this).forceLoad();
+        getLoaderManager().initLoader(LOADER_CATEGORY_ID, savedInstanceState,this).forceLoad();
         return v;
     }
 

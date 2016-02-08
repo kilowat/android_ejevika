@@ -51,6 +51,7 @@ public class AdapterProduct extends RecyclerView.Adapter<AdapterProduct.ViewHold
     @Override
     public void onBindViewHolder(AdapterProduct.ViewHolderProduct holder, int position) {
         holder.productName.setText(mProducts.get(position).getName());
+        holder.productPrice.setText(String.valueOf(mProducts.get(position).getPrice()));
         String urlThubnail = URL_HOST+mProducts.get(position).getPicture();
         imageLoad(urlThubnail,holder);
     }
@@ -78,12 +79,14 @@ public class AdapterProduct extends RecyclerView.Adapter<AdapterProduct.ViewHold
     public class ViewHolderProduct extends RecyclerView.ViewHolder {
         public TextView productName;
         public ImageView productPicture;
+        public TextView productPrice;
 
         public ViewHolderProduct(View itemView) {
             super(itemView);
 
             productName = (TextView) itemView.findViewById(R.id.product_name);
             productPicture = (ImageView) itemView.findViewById(R.id.product_picture);
+            productPrice = (TextView) itemView.findViewById(R.id.product_price);
         }
     }
 }
