@@ -25,7 +25,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         CategoryListFragment fragment = CategoryListFragment.newInstance();
-        ft.add(R.id.content, fragment);
+        ft.replace(R.id.content, fragment);
         ft.commit();
     }
 }
