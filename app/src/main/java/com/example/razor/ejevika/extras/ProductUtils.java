@@ -22,7 +22,7 @@ public class ProductUtils {
     public static ArrayList<Product> loadProducts(RequestQueue requestQueue, long categoryId){
         JSONArray requestResult =  Requestor.productRequset(requestQueue, URL_PRODUCT_SECTION+categoryId);
         ArrayList<Product> products = Parser.parseProductJSON(requestResult);
-        MyApplication.getWritableDatabase().insertProduct(products, true);
+        MyApplication.getWritableDatabase().insertProduct(products, categoryId, true);
         return products;
     }
 }

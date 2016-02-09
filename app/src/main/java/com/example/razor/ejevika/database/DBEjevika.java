@@ -52,9 +52,9 @@ public class DBEjevika {
         sqLiteDatabase.endTransaction();
     }
 
-    public void insertProduct(ArrayList<Product> products, boolean clearPrev){
+    public void insertProduct(ArrayList<Product> products, long categoryId, boolean clearPrev){
         if(clearPrev){
-            deleteProducts();
+            deleteProducts(categoryId);
         }
         String sql = "INSERT INTO "+EjevikaHelper.TABLE_PRODUCT+" VALUES(?,?,?,?,?);";
         SQLiteStatement sqLiteStatement = sqLiteDatabase.compileStatement(sql);
@@ -131,8 +131,9 @@ public class DBEjevika {
         sqLiteDatabase.delete(EjevikaHelper.TABLE_CATEGORIES,null,null);
     }
 
-    private void deleteProducts() {
-        sqLiteDatabase.delete(EjevikaHelper.TABLE_PRODUCT,null,null);
+    private void deleteProducts(long categoryId) {
+        String where = EjevikaHelper.COLUMN_SECTION_ID_PRODUCT+"="+categoryId;
+        sqLiteDatabase.delete(EjevikaHelper.TABLE_PRODUCT,where,null);
     }
 
     public void resetTables(){

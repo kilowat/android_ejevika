@@ -1,9 +1,12 @@
 package com.example.razor.ejevika.dummy;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by razor on 01.02.2016.
  */
-public class Category {
+public class Category implements Parcelable {
 
     private long id;
     private String picture;
@@ -18,6 +21,24 @@ public class Category {
         this.picture = picture;
         this.name = name;
     }
+
+    protected Category(Parcel in) {
+        id = in.readLong();
+        picture = in.readString();
+        name = in.readString();
+    }
+
+    public static final Creator<Category> CREATOR = new Creator<Category>() {
+        @Override
+        public Category createFromParcel(Parcel in) {
+            return new Category(in);
+        }
+
+        @Override
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
 
     public void setId(long id) {
         this.id = id;
@@ -61,5 +82,17 @@ public class Category {
         return "\nID: "+id+
                 "\nNAME: "+name+
                 "\nPICTURE: "+picture;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(picture);
+        dest.writeString(name);
     }
 }

@@ -36,6 +36,9 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     protected AdapterProduct adapterProduct;
     protected RecyclerView recyclerView;
     protected long sectionId=-1;
+    protected ArrayList<Product> products = new ArrayList<>();
+
+    public static final String PRODUCTS = "products";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +51,14 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
         adapterProduct = new AdapterProduct(getActivity());
         recyclerView.setAdapter(adapterProduct);
 
-        getLoaderManager().initLoader(LoaderProduct.LOADER_PRODUCT_ID,args,this).forceLoad();
+        if(savedInstanceState!=null) {
+            products = savedInstanceState.getParcelableArrayList(PRODUCTS);
+            adapterProduct.setProducts(products);
+        }else{
+            getLoaderManager().initLoader(LoaderProduct.LOADER_PRODUCT_ID,args,this).forceLoad();
+        }
+
+
 
         return v;
     }
@@ -62,7 +72,14 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(PRODUCTS,products);
+    }
+
+    @Override
     public void onProductsLoadComplite(ArrayList<Product> products) {
+        this.products = products;
         adapterProduct.setProducts(products);
     }
 
@@ -74,7 +91,6 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        ArrayList<Product> products = new ArrayList<>();
         products =  DBEjevika.getProductsFromCursor(data);
         if(products.isEmpty()) {
             new TaskLoadProduct(this,sectionId).execute();
