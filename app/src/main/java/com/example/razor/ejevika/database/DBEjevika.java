@@ -1,5 +1,6 @@
 package com.example.razor.ejevika.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -76,6 +77,12 @@ public class DBEjevika {
         sqLiteDatabase.endTransaction();
     }
 
+    public void insertToBasket(long id){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EjevikaHelper.COLUMN_BASKE_PRODUCT_ID,id);
+        sqLiteDatabase.insert(EjevikaHelper.TABLE_BASKET,null,contentValues);
+    }
+
     public Cursor readCategory(){
         Cursor cursor = sqLiteDatabase.query(EjevikaHelper.TABLE_CATEGORIES,null,null,null,null,null,null);
         return cursor;
@@ -139,12 +146,16 @@ public class DBEjevika {
         try {
             sqLiteDatabase.execSQL(EjevikaHelper.DROP_TABLE_CATEGORIES);
             sqLiteDatabase.execSQL(EjevikaHelper.DROP_TABLE_PRODUCTS);
+            sqLiteDatabase.execSQL(EjevikaHelper.DROP_TABLE_BASKET);
             Log.d(LOG_DB_TAG, EjevikaHelper.DROP_TABLE_CATEGORIES);
             Log.d(LOG_DB_TAG, EjevikaHelper.DROP_TABLE_PRODUCTS);
+            Log.d(LOG_DB_TAG, EjevikaHelper.DROP_TABLE_BASKET);
             sqLiteDatabase.execSQL(EjevikaHelper.CREATE_CATEGORIES_TABLE);
             sqLiteDatabase.execSQL(EjevikaHelper.CREATE_PRODUCTS_TABLE);
+            sqLiteDatabase.execSQL(EjevikaHelper.CREATE_BASKET_TABLE);
             Log.d(LOG_DB_TAG, EjevikaHelper.CREATE_CATEGORIES_TABLE);
             Log.d(LOG_DB_TAG,EjevikaHelper.CREATE_PRODUCTS_TABLE);
+            Log.d(LOG_DB_TAG, EjevikaHelper.CREATE_BASKET_TABLE);
         }catch (SQLException e){
             Log.d(LOG_DB_TAG,"exception_ "+e.getMessage());
         }
@@ -174,7 +185,15 @@ public class DBEjevika {
                 COLUMN_SECTION_ID_PRODUCT+" INTEGER, "+
                 COLUMN_PRICE_PRODUCT+" INTEGER);";
         public static final String DROP_TABLE_PRODUCTS = "DROP TABLE IF EXISTS "+TABLE_PRODUCT;
-/**********************************************************************************/
+/*******************************Basket table***************************************************/
+        public final static String TABLE_BASKET = "basket";
+        public final static String COLUMN_BASKE_PRODUCT_ID="product_id";
+        public final static String CREATE_BASKET_TABLE = "CREATE TABLE "+TABLE_BASKET+"( "+
+                COLUMN_ID+" INTEGER AUTOINCREMENT, "+
+                COLUMN_BASKE_PRODUCT_ID+ "INTEGER);";
+        public static final String DROP_TABLE_BASKET = "DROP TABLE IF EXISTS "+ TABLE_BASKET;
+/**********************************************************************************************/
+
         private static final String DB_NAME = "ejevika_db";
         private static final int DB_VERSION = 1;
         private Context context;
@@ -189,6 +208,7 @@ public class DBEjevika {
             try{
                 db.execSQL(CREATE_CATEGORIES_TABLE);
                 db.execSQL(CREATE_PRODUCTS_TABLE);
+                db.execSQL(CREATE_BASKET_TABLE);
                 Log.d(LOG_DB_TAG,"database created");
             }catch (SQLException e){
                 Log.d(LOG_DB_TAG,"exception "+e.getMessage());

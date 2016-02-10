@@ -12,6 +12,8 @@ import com.example.razor.ejevika.network.VolleySingleton;
 
 import java.util.ArrayList;
 
+import static com.example.razor.ejevika.extras.UrlEndPoints.URL_PRODUCT_SECTION;
+
 /**
  * Created by razor on 07.02.2016.
  */
@@ -32,7 +34,8 @@ public class TaskLoadProduct extends AsyncTask<Void,Void,ArrayList<Product>> {
 
     @Override
     protected ArrayList<Product> doInBackground(Void... params) {
-        ArrayList<Product> products = ProductUtils.loadProducts(requestQueue, categoryId);
+        String url =URL_PRODUCT_SECTION+categoryId;
+        ArrayList<Product> products = ProductUtils.loadProducts(requestQueue, url);
         return products;
     }
 

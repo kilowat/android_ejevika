@@ -1,5 +1,6 @@
 package com.example.razor.ejevika.acitvities;
 
+import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.razor.ejevika.R;
+import com.example.razor.ejevika.dialogs.DialogFragmentAuth;
 
 /**
  * Created by razor on 07.02.2016.
@@ -44,7 +46,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+
+        }
+        if(id==R.id.showAuth){
+            new DialogFragmentAuth().show(getSupportFragmentManager(),"dialog_auth");
         }
 
         return super.onOptionsItemSelected(item);
