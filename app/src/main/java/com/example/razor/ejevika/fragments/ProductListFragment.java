@@ -36,8 +36,7 @@ import java.util.ArrayList;
  * Created by razor on 06.02.2016.
  */
 public class ProductListFragment extends Fragment implements ProductLoadListener,
-        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener
-        {
+        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener{
     @Nullable
 
     public static final String SECTION_ID = "section_id";
@@ -128,8 +127,5 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     }
 
 
-    @Override
-    public void onItemLongPress(View childView, int position) {
 
-    }
 }
