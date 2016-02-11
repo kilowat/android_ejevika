@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +29,7 @@ public class AdapterProduct extends RecyclerView.Adapter<AdapterProduct.ViewHold
     private VolleySingleton mVolleySinleton;
     private ImageLoader mImageLoader;
     private LayoutInflater mInflater;
-
+    private OnCartAddClickListener onCartAddClickListener;
 
     public AdapterProduct(Context context){
         mInflater = LayoutInflater.from(context);
@@ -61,6 +62,15 @@ public class AdapterProduct extends RecyclerView.Adapter<AdapterProduct.ViewHold
         return mProducts.size();
     }
 
+    public void setListener(OnCartAddClickListener onCartAddClickListener){
+        if(onCartAddClickListener instanceof OnCartAddClickListener){
+            this.onCartAddClickListener = (OnCartAddClickListener)onCartAddClickListener;
+        }else{
+            throw new ClassCastException("must be implements OnCartAddClickListener");
+        }
+
+    }
+
     private void imageLoad(String urlThubnail, final ViewHolderProduct viewHolderProduct){
         if(!urlThubnail.equals(NA)) {
             mImageLoader.get(urlThubnail, new ImageLoader.ImageListener() {
@@ -80,13 +90,27 @@ public class AdapterProduct extends RecyclerView.Adapter<AdapterProduct.ViewHold
         public TextView productName;
         public ImageView productPicture;
         public TextView productPrice;
+        public Button btnAddToCart;
 
-        public ViewHolderProduct(View itemView) {
+        public ViewHolderProduct(final View itemView) {
             super(itemView);
 
             productName = (TextView) itemView.findViewById(R.id.product_name);
             productPicture = (ImageView) itemView.findViewById(R.id.product_picture);
             productPrice = (TextView) itemView.findViewById(R.id.product_price);
+            btnAddToCart = (Button) itemView.findViewById(R.id.addToBasket);
+            btnAddToCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onCartAddClickListener!=null){
+                        onCartAddClickListener.onCartAddClick(itemView,mProducts.get(getLayoutPosition()));
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnCartAddClickListener{
+        public void onCartAddClick(View v, Product product);
     }
 }

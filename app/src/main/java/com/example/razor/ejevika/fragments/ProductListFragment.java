@@ -36,7 +36,7 @@ import java.util.ArrayList;
  * Created by razor on 06.02.2016.
  */
 public class ProductListFragment extends Fragment implements ProductLoadListener,
-        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener{
+        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener,AdapterProduct.OnCartAddClickListener{
     @Nullable
 
     public static final String SECTION_ID = "section_id";
@@ -60,8 +60,8 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), countInRow));
         adapterProduct = new AdapterProduct(getActivity());
         recyclerView.setAdapter(adapterProduct);
-        RecyclerItemClickListener recyclerItemClickListener = new RecyclerItemClickListener(getActivity(), this);
-        recyclerView.addOnItemTouchListener(recyclerItemClickListener);
+        adapterProduct.setListener(this);
+
 
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeProducts);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -71,8 +71,6 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
         } else {
             getLoaderManager().initLoader(LoaderProduct.LOADER_PRODUCT_ID, args, this).forceLoad();
         }
-
-
         return v;
     }
 
@@ -127,5 +125,8 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     }
 
 
-
+    @Override
+    public void onCartAddClick(View v, Product product) {
+        Toast.makeText(getActivity(),product.getName(),Toast.LENGTH_SHORT).show();
+    }
 }
