@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.Context;
 
 import com.example.razor.ejevika.database.DBEjevika;
+import com.example.razor.ejevika.dummy.BasketItem;
+
+import java.util.ArrayList;
 
 /**
  * Created by razor on 01.02.2016.
@@ -11,6 +14,7 @@ import com.example.razor.ejevika.database.DBEjevika;
 public class MyApplication extends Application {
     private static MyApplication mInstance;
     private static DBEjevika database;
+
 
     public static MyApplication getInstance(){
         return mInstance;
@@ -25,6 +29,7 @@ public class MyApplication extends Application {
             database = new DBEjevika(getAppContext());
         return database;
     }
+
 
     @Override
     public void onCreate() {

@@ -19,7 +19,7 @@ import static com.example.razor.ejevika.extras.UrlEndPoints.*;
  */
 public class ProductUtils {
 
-    public static ArrayList<Product> loadProducts(RequestQueue requestQueue, String url){
+    public static ArrayList<Product> loadProducts(RequestQueue requestQueue, String url,long categoryId){
         JSONArray requestResult =  Requestor.productRequset(requestQueue, url);
         ArrayList<Product> products = Parser.parseProductJSON(requestResult);
         MyApplication.getWritableDatabase().insertProduct(products, categoryId, true);

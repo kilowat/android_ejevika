@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.razor.ejevika.MyApplication;
 import com.example.razor.ejevika.R;
 import com.example.razor.ejevika.adapters.AdapterCategory;
 import com.example.razor.ejevika.dummy.Category;
@@ -23,6 +24,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyApplication.getWritableDatabase().resetTables();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         CategoryListFragment fragment = CategoryListFragment.newInstance();
         ft.replace(R.id.content, fragment);

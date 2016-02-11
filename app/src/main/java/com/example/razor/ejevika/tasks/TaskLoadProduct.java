@@ -35,7 +35,7 @@ public class TaskLoadProduct extends AsyncTask<Void,Void,ArrayList<Product>> {
     @Override
     protected ArrayList<Product> doInBackground(Void... params) {
         String url =URL_PRODUCT_SECTION+categoryId;
-        ArrayList<Product> products = ProductUtils.loadProducts(requestQueue, url);
+        ArrayList<Product> products = ProductUtils.loadProducts(requestQueue, url,categoryId);
         return products;
     }
 

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import com.example.razor.ejevika.dummy.BasketItem;
 import com.example.razor.ejevika.dummy.Category;
 import com.example.razor.ejevika.dummy.Product;
 
@@ -79,10 +80,29 @@ public class DBEjevika {
 
     public void insertToBasket(long id){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(EjevikaHelper.COLUMN_BASKE_PRODUCT_ID,id);
-        sqLiteDatabase.insert(EjevikaHelper.TABLE_BASKET,null,contentValues);
+        contentValues.put(EjevikaHelper.COLUMN_BASKET_PRODUCT_ID, id);
+        sqLiteDatabase.insert(EjevikaHelper.TABLE_BASKET, null, contentValues);
     }
 
+    public Cursor readFromBasket(){
+        Cursor cursor = sqLiteDatabase.query(EjevikaHelper.TABLE_BASKET,null,null,null,null,null,null,null);
+        return cursor;
+    }
+    public void removeFromBakset(int productId){
+        String where = EjevikaHelper.COLUMN_BASKET_PRODUCT_ID+"=?";
+        String[] bind = {String.valueOf(productId)};
+
+        if(productId==-1){
+            where = null;
+            bind = null;
+        }
+        try{
+            sqLiteDatabase.delete(EjevikaHelper.TABLE_BASKET,where,bind);
+        }catch (SQLException e){
+            Log.d(LOG_DB_TAG,e.getMessage());
+        }
+
+    }
     public Cursor readCategory(){
         Cursor cursor = sqLiteDatabase.query(EjevikaHelper.TABLE_CATEGORIES,null,null,null,null,null,null);
         return cursor;
@@ -133,7 +153,21 @@ public class DBEjevika {
         }
         return products;
     }
-
+    public static ArrayList<BasketItem> getBasketProductsFromCursor(Cursor cursor){
+        ArrayList<BasketItem> basketItems = new ArrayList<>();
+        if(cursor.getCount()>0){
+            cursor.moveToFirst();
+            do{
+                long id = cursor.getLong(cursor.getColumnIndex(EjevikaHelper.COLUMN_ID));
+                String name = cursor.getString(cursor.getColumnIndex(EjevikaHelper.COLUMN_BASKET_PRODUCT_NAME));
+                String picture = cursor.getString(cursor.getColumnIndex(EjevikaHelper.COLUMN_BASKET_PRODUCT_PICTURE));
+                double price = cursor.getDouble(cursor.getColumnIndex(EjevikaHelper.COLUMN_BASKET_PRODUCT_PRICE));
+                int count = cursor.getInt(cursor.getColumnIndex(EjevikaHelper.COLUMNT_BASKET_PRODUCT_COUNT));
+                basketItems.add(new BasketItem(id,name,picture,price,count));
+            }while (cursor.moveToNext());
+        }
+        return basketItems;
+    }
     private void deleteCategories() {
         sqLiteDatabase.delete(EjevikaHelper.TABLE_CATEGORIES,null,null);
     }
@@ -186,12 +220,20 @@ public class DBEjevika {
                 COLUMN_SECTION_ID_PRODUCT+" INTEGER, "+
                 COLUMN_PRICE_PRODUCT+" INTEGER);";
         public static final String DROP_TABLE_PRODUCTS = "DROP TABLE IF EXISTS "+TABLE_PRODUCT;
-/*******************************Basket table***************************************************/
+/*******************************BasketItem table***************************************************/
         public final static String TABLE_BASKET = "basket";
-        public final static String COLUMN_BASKE_PRODUCT_ID="product_id";
+        public final static String COLUMN_BASKET_PRODUCT_ID="basket_product_id";
+        public final static String COLUMN_BASKET_PRODUCT_NAME = "basket_product_name";
+        public final static String COLUMN_BASKET_PRODUCT_PICTURE = "basket_product_picture";
+        public final static String COLUMN_BASKET_PRODUCT_PRICE = "basket_product_price";
+        public final static String COLUMNT_BASKET_PRODUCT_COUNT = "basket_product_count";
         public final static String CREATE_BASKET_TABLE = "CREATE TABLE "+TABLE_BASKET+"( "+
-                COLUMN_ID+" INTEGER AUTOINCREMENT, "+
-                COLUMN_BASKE_PRODUCT_ID+ "INTEGER);";
+                COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
+                COLUMN_BASKET_PRODUCT_ID+" INTEGER, "+
+                COLUMN_BASKET_PRODUCT_NAME+" TEXT, "+
+                COLUMN_BASKET_PRODUCT_PICTURE+" TEXT, "+
+                COLUMN_BASKET_PRODUCT_PRICE+" INTEGER, "+
+                COLUMNT_BASKET_PRODUCT_COUNT+" INTEGER);";
         public static final String DROP_TABLE_BASKET = "DROP TABLE IF EXISTS "+ TABLE_BASKET;
 /**********************************************************************************************/
 
