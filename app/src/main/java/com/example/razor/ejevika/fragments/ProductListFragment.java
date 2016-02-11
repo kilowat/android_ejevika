@@ -14,6 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
 import com.example.razor.ejevika.MyApplication;
 import com.example.razor.ejevika.R;
 import com.example.razor.ejevika.adapters.AdapterProduct;
@@ -21,6 +24,7 @@ import com.example.razor.ejevika.callbacks.ProductLoadListener;
 import com.example.razor.ejevika.database.DBEjevika;
 import com.example.razor.ejevika.dummy.Product;
 
+import com.example.razor.ejevika.listeners.RecyclerItemClickListener;
 import com.example.razor.ejevika.loaders.LoaderProduct;
 import com.example.razor.ejevika.tasks.TaskLoadCategory;
 import com.example.razor.ejevika.tasks.TaskLoadProduct;
@@ -32,7 +36,8 @@ import java.util.ArrayList;
  * Created by razor on 06.02.2016.
  */
 public class ProductListFragment extends Fragment implements ProductLoadListener,
-        LoaderManager.LoaderCallbacks<Cursor>,SwipeRefreshLayout.OnRefreshListener {
+        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener
+        {
     @Nullable
 
     public static final String SECTION_ID = "section_id";
@@ -40,7 +45,7 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     public int countInRow = 2;
     protected AdapterProduct adapterProduct;
     protected RecyclerView recyclerView;
-    protected long sectionId=-1;
+    protected long sectionId = -1;
     protected ArrayList<Product> products = new ArrayList<>();
     protected SwipeRefreshLayout swipeRefreshLayout;
 
@@ -53,18 +58,20 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
         sectionId = args.getLong(SECTION_ID);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.products_list_recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),countInRow));
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), countInRow));
         adapterProduct = new AdapterProduct(getActivity());
         recyclerView.setAdapter(adapterProduct);
+        RecyclerItemClickListener recyclerItemClickListener = new RecyclerItemClickListener(getActivity(), this);
+        recyclerView.addOnItemTouchListener(recyclerItemClickListener);
+
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeProducts);
         swipeRefreshLayout.setOnRefreshListener(this);
-        if(savedInstanceState!=null) {
+        if (savedInstanceState != null) {
             products = savedInstanceState.getParcelableArrayList(PRODUCTS);
             adapterProduct.setProducts(products);
-        }else{
-            getLoaderManager().initLoader(LoaderProduct.LOADER_PRODUCT_ID,args,this).forceLoad();
+        } else {
+            getLoaderManager().initLoader(LoaderProduct.LOADER_PRODUCT_ID, args, this).forceLoad();
         }
-
 
 
         return v;
@@ -81,12 +88,12 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(PRODUCTS,products);
+        outState.putParcelableArrayList(PRODUCTS, products);
     }
 
     @Override
     public void onProductsLoadComplite(ArrayList<Product> products) {
-        if(swipeRefreshLayout.isRefreshing()){
+        if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
         }
         this.products = products;
@@ -96,15 +103,15 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new LoaderProduct(getActivity(),sectionId);
+        return new LoaderProduct(getActivity(), sectionId);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        products =  DBEjevika.getProductsFromCursor(data);
-        if(products.isEmpty()) {
-            new TaskLoadProduct(this,sectionId).execute();
-        }else {
+        products = DBEjevika.getProductsFromCursor(data);
+        if (products.isEmpty()) {
+            new TaskLoadProduct(this, sectionId).execute();
+        } else {
             adapterProduct.setProducts(products);
         }
     }
@@ -117,6 +124,12 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     @Override
     public void onRefresh() {
         Log.d(REFRES_TAG, "refresh run");
-        new TaskLoadProduct(this,sectionId).execute();
+        new TaskLoadProduct(this, sectionId).execute();
+    }
+
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
     }
 }

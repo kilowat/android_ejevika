@@ -21,5 +21,10 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
         android:id="@+id/product_price"/>
-
+    <Button
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addToBasket"
+        android:text="add"/>
 </LinearLayout>
