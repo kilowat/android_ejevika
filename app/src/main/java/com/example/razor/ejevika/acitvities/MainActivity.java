@@ -14,6 +14,8 @@ import android.view.MenuItem;
 
 import com.example.razor.ejevika.R;
 import com.example.razor.ejevika.adapters.AdapterCategory;
+import com.example.razor.ejevika.dummy.Category;
+import com.example.razor.ejevika.fragments.CategoryListFragment;
 import com.example.razor.ejevika.fragments.ProductListFragment;
 
 public class MainActivity extends BaseActivity {
@@ -21,5 +23,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        CategoryListFragment fragment = CategoryListFragment.newInstance();
+        ft.replace(R.id.content, fragment);
+        ft.commit();
     }
 }

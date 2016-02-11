@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
     android:id="@+id/category_item"
     android:background="?attr/selectableItemBackground">
+    <android.support.v7.widget.CardView
+        android:layout_width="100dp"
+        android:layout_height="110dp"
+        card_view:cardCornerRadius="4dp">
     <ImageView
         tools:background="#ccc"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/category_picture"/>
     <TextView
+
+        android:textSize="12sp"
+        android:textAlignment="center"
+        android:layout_gravity="bottom|center"
         android:textColor="#000"
         tools:text="category name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/category_name"/>
-
-</LinearLayout>
+        android:id="@+id/category_name"
+        />
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

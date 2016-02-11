@@ -49,19 +49,27 @@ public class CategoryListFragment extends Fragment implements CategoryLoadListen
     public static final int CATEGORY_ITEM_COUNT = 3;
     public static final String REFRES_TAG = "refresh_tag";
     public static final String ID_CATEGORY = "id_category";
+    public static final String CATEGORIES = "categories";
     public SwipeRefreshLayout swipeRefreshLayout;
     public RecyclerItemClickListener recyclerItemClickListener;
+    public ArrayList<Category> categories = new ArrayList<>();
 
 
     public CategoryListFragment() {
         // Required empty public constructor
     }
 
-    public CategoryListFragment newInstance(){
+    public static CategoryListFragment newInstance(){
         CategoryListFragment fragment = new CategoryListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(CATEGORIES,categories);
     }
 
     @Override
@@ -80,8 +88,13 @@ public class CategoryListFragment extends Fragment implements CategoryLoadListen
         swipeRefreshLayout.setOnRefreshListener(this);
 
        // MyApplication.getWritableDatabase().resetTables();
+        if(savedInstanceState!=null){
+            categories = savedInstanceState.getParcelableArrayList(CATEGORIES);
+            adapterCategory.setCategories(categories);
+        }else{
+            getLoaderManager().initLoader(LOADER_CATEGORY_ID, savedInstanceState,this).forceLoad();
+        }
 
-        getLoaderManager().initLoader(LOADER_CATEGORY_ID, savedInstanceState,this).forceLoad();
         return v;
     }
 
@@ -96,6 +109,7 @@ public class CategoryListFragment extends Fragment implements CategoryLoadListen
     * */
     @Override
     public void onCategoriesLoadComplite(ArrayList<Category> categories) {
+        this.categories = categories;
         if(swipeRefreshLayout.isRefreshing()){
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -109,7 +123,7 @@ public class CategoryListFragment extends Fragment implements CategoryLoadListen
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-      ArrayList<Category> categories = DBEjevika.getCategoriesFromCursor(data);
+      categories = DBEjevika.getCategoriesFromCursor(data);
         if(categories.isEmpty()){
             new TaskLoadCategory(this).execute();
         }else {

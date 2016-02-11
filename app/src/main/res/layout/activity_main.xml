@@ -30,11 +30,5 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <fragment
-            android:id="@+id/categor_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.example.razor.ejevika.fragments.CategoryListFragment"
-            tools:layout="@layout/fragment_category_list" />
     </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>
