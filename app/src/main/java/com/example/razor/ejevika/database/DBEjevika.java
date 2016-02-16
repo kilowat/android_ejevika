@@ -82,11 +82,27 @@ public class DBEjevika {
         ContentValues contentValues = new ContentValues();
         contentValues.put(EjevikaHelper.COLUMN_BASKET_PRODUCT_ID, id);
         sqLiteDatabase.insert(EjevikaHelper.TABLE_BASKET, null, contentValues);
+        Log.d(LOG_DB_TAG, contentValues.toString()+ ":put to basket");
     }
 
     public Cursor readFromBasket(){
         Cursor cursor = sqLiteDatabase.query(EjevikaHelper.TABLE_BASKET,null,null,null,null,null,null,null);
         return cursor;
+    }
+    public ArrayList<BasketItem> readBasketItemFromCursor(Cursor cursor){
+        ArrayList<BasketItem> basketItems = new ArrayList<>();
+        cursor.moveToFirst();
+        do {
+            long id = cursor.getLong(cursor.getColumnIndex(EjevikaHelper.COLUMN_BASKET_PRODUCT_ID));
+            String name = cursor.getString(cursor.getColumnIndex(EjevikaHelper.COLUMN_BASKET_PRODUCT_NAME));
+            String picture = cursor.getString(cursor.getColumnIndex(EjevikaHelper.COLUMN_BASKET_PRODUCT_PICTURE));
+            Double price = cursor.getDouble(cursor.getColumnIndex(EjevikaHelper.COLUMN_BASKET_PRODUCT_PRICE));
+            int count = cursor.getInt(cursor.getColumnIndex(EjevikaHelper.COLUMNT_BASKET_PRODUCT_COUNT));
+
+            BasketItem basketItem = new BasketItem(id, name, picture, price, count);
+            basketItems.add(basketItem);
+        }while(cursor.moveToNext());
+        return basketItems;
     }
     public void removeFromBakset(int productId){
         String where = EjevikaHelper.COLUMN_BASKET_PRODUCT_ID+"=?";

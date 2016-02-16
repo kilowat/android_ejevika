@@ -22,8 +22,10 @@ import com.example.razor.ejevika.R;
 import com.example.razor.ejevika.adapters.AdapterProduct;
 import com.example.razor.ejevika.callbacks.ProductLoadListener;
 import com.example.razor.ejevika.database.DBEjevika;
+import com.example.razor.ejevika.dummy.BasketItem;
 import com.example.razor.ejevika.dummy.Product;
 
+import com.example.razor.ejevika.extras.Basket;
 import com.example.razor.ejevika.listeners.RecyclerItemClickListener;
 import com.example.razor.ejevika.loaders.LoaderProduct;
 import com.example.razor.ejevika.tasks.TaskLoadCategory;
@@ -36,7 +38,7 @@ import java.util.ArrayList;
  * Created by razor on 06.02.2016.
  */
 public class ProductListFragment extends Fragment implements ProductLoadListener,
-        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener,AdapterProduct.OnCartAddClickListener{
+        LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener, AdapterProduct.OnCartAddClickListener {
     @Nullable
 
     public static final String SECTION_ID = "section_id";
@@ -49,6 +51,7 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     protected SwipeRefreshLayout swipeRefreshLayout;
 
     public static final String PRODUCTS = "products";
+    public Basket basket = Basket.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,6 +130,8 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
 
     @Override
     public void onCartAddClick(View v, Product product) {
-        Toast.makeText(getActivity(),product.getName(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), product.getName() + "Добавлен в корзину", Toast.LENGTH_SHORT).show();
+        basket.add(product.getId());
+        ArrayList<BasketItem> basketItems = basket.getProducts();
     }
 }
