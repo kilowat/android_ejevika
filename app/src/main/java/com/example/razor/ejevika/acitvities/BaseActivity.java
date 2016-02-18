@@ -1,5 +1,6 @@
 package com.example.razor.ejevika.acitvities;
 
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 
 import com.example.razor.ejevika.R;
 import com.example.razor.ejevika.dialogs.DialogFragmentAuth;
+import com.example.razor.ejevika.extras.Basket;
 
 /**
  * Created by razor on 07.02.2016.
@@ -18,10 +20,13 @@ import com.example.razor.ejevika.dialogs.DialogFragmentAuth;
 public abstract class BaseActivity extends AppCompatActivity {
     public Toolbar toolbar;
     public FloatingActionButton fab;
+    public CoordinatorLayout coordinatorLayout;
+    public Basket basket = Basket.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
         setToolBar();
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,8 +64,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         if(id==R.id.showAuth){
             new DialogFragmentAuth().show(getSupportFragmentManager(),"dialog_auth");
         }
+        if(id==R.id.showBasket){
+            showBasket();
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void showBasket(){
+        basket.showSnakeBar(coordinatorLayout);
+    }
 }

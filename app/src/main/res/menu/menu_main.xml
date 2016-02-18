@@ -11,4 +11,8 @@
         android:title="show auth"
         app:showAsAction="never"
         />
+    <item android:id="@+id/showBasket"
+        android:title="showBasket"
+        app:showAsAction="never"
+        />
 </menu>

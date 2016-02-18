@@ -94,7 +94,7 @@ public class DBEjevika {
                 new String[]{String.valueOf(addId)},null, null, null);
 
         c.moveToFirst();
-        if(c!=null){
+        if(c.getCount()>0){
             ContentValues changeContentValues = new ContentValues();
             int curCount = c.getInt(0);
             changeContentValues.put(EjevikaHelper.COLUMNT_BASKET_PRODUCT_COUNT,curCount++);
@@ -278,7 +278,7 @@ public class DBEjevika {
                 COLUMN_BASKET_PRODUCT_PRICE+" INTEGER, "+
                 COLUMNT_BASKET_PRODUCT_COUNT+" INTEGER);";
         public static final String DROP_TABLE_BASKET = "DROP TABLE IF EXISTS "+ TABLE_BASKET;
-        public static final String TABLE_BASKET_COUNT = "SELECT count(*), sum("+COLUMN_BASKET_PRODUCT_PRICE+") as sum FROM "+TABLE_BASKET;
+        public static final String TABLE_BASKET_COUNT = "SELECT count(*) as count FROM "+TABLE_BASKET;
 /**********************************************************************************************/
 
         private static final String DB_NAME = "ejevika_db";

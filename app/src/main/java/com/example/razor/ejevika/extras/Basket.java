@@ -26,7 +26,7 @@ public class Basket {
     private static Basket instance;
 
     private Basket(){
-        basketRefresh();
+
     }
 
     public static Basket getInstance(){
@@ -47,8 +47,8 @@ public class Basket {
 
     }
 
-    public void showSnakeBar(CoordinatorLayout coordinatorLayout,int countItem, double summ){
-        Snackbar snackbar = Snackbar.make(coordinatorLayout, countItem+" товар "+summ+" р", Snackbar.LENGTH_INDEFINITE)
+    public void showSnakeBar(CoordinatorLayout coordinatorLayout){
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, getCount()+" товар "+summ+" р", Snackbar.LENGTH_INDEFINITE)
                 .setAction("Оформить", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -61,12 +61,12 @@ public class Basket {
     }
 
     public void basketRefresh(){
-        Cursor cursor = MyApplication.getWritableDatabase().getCountBasket();
-        cursor.moveToFirst();
-        int count = cursor.getInt(0);
-        double summ = cursor.getDouble(1);
-        this.count = count;
-        this.summ = summ;
+        ArrayList<BasketItem> basketItems = getProducts();
+
+        for(int i = 0;basketItems.size()>i;i++){
+            this.summ+=basketItems.get(i).getProductPrice()*basketItems.get(i).getProductCount();
+        }
+
     }
 
     public int getCount() {

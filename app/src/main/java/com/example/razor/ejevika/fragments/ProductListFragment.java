@@ -139,14 +139,7 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     public void onCartAddClick(View v, Product product) {
         Toast.makeText(getActivity(), product.getName() + "Добавлен в корзину", Toast.LENGTH_SHORT).show();
         basket.add(product,1);
-        ArrayList<BasketItem> basketItems = basket.getProducts();
-        if(basketItems.size()>0){
-            double basketItem = basketItems.get(0).getProductPrice();
-            Log.d("test","price "+basketItem);
-        }
-
-
-        basket.showSnakeBar(coordinatorLayout, basket.getCount(), basket.getSumm());
+        basket.showSnakeBar(coordinatorLayout);
 
 
     }
