@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import com.example.razor.ejevika.MyApplication;
 import com.example.razor.ejevika.dummy.BasketItem;
 import com.example.razor.ejevika.dummy.Category;
 import com.example.razor.ejevika.dummy.Product;
@@ -49,7 +50,7 @@ public class DBEjevika {
             sqLiteStatement.execute();
         }
 
-        Log.d(LOG_DB_TAG,"inserting "+categories.size()+" row  for time "+new Date(System.currentTimeMillis()));
+        Log.d(LOG_DB_TAG, "inserting " + categories.size() + " row  for time " + new Date(System.currentTimeMillis()));
         sqLiteDatabase.setTransactionSuccessful();
         sqLiteDatabase.endTransaction();
     }
@@ -73,16 +74,35 @@ public class DBEjevika {
             sqLiteStatement.execute();
         }
 
-        Log.d(LOG_DB_TAG,"inserting products "+products.size()+" row  for time "+new Date(System.currentTimeMillis()));
+        Log.d(LOG_DB_TAG, "inserting products " + products.size() + " row  for time " + new Date(System.currentTimeMillis()));
         sqLiteDatabase.setTransactionSuccessful();
         sqLiteDatabase.endTransaction();
     }
 
-    public void insertToBasket(long id){
+    public void insertToBasket(Product product, int count){
         ContentValues contentValues = new ContentValues();
-        contentValues.put(EjevikaHelper.COLUMN_BASKET_PRODUCT_ID, id);
-        sqLiteDatabase.insert(EjevikaHelper.TABLE_BASKET, null, contentValues);
-        Log.d(LOG_DB_TAG, contentValues.toString()+ ":put to basket");
+        contentValues.put(EjevikaHelper.COLUMN_BASKET_PRODUCT_ID, product.getId());
+        contentValues.put(EjevikaHelper.COLUMN_BASKET_PRODUCT_NAME, product.getName());
+        contentValues.put(EjevikaHelper.COLUMN_BASKET_PRODUCT_PICTURE, product.getPicture());
+        contentValues.put(EjevikaHelper.COLUMN_BASKET_PRODUCT_PRICE, product.getPrice());
+        contentValues.put(EjevikaHelper.COLUMNT_BASKET_PRODUCT_COUNT, count);
+        long addId = product.getId();
+
+        Cursor c = sqLiteDatabase.query(EjevikaHelper.TABLE_BASKET,
+                new String[]{EjevikaHelper.COLUMNT_BASKET_PRODUCT_COUNT},
+                EjevikaHelper.COLUMN_BASKET_PRODUCT_ID+"=?",
+                new String[]{String.valueOf(addId)},null, null, null);
+
+        c.moveToFirst();
+        if(c!=null){
+            ContentValues changeContentValues = new ContentValues();
+            int curCount = c.getInt(0);
+            changeContentValues.put(EjevikaHelper.COLUMNT_BASKET_PRODUCT_COUNT,curCount++);
+            sqLiteDatabase.update(EjevikaHelper.TABLE_BASKET,contentValues,EjevikaHelper.COLUMN_BASKET_PRODUCT_ID+"=?",new String[]{String.valueOf(addId)});
+        }else {
+            sqLiteDatabase.insert(EjevikaHelper.TABLE_BASKET, null, contentValues);
+            Log.d(LOG_DB_TAG, contentValues.toString() + ":put to basket");
+        }
     }
 
     public Cursor readFromBasket(){
@@ -119,6 +139,13 @@ public class DBEjevika {
         }
 
     }
+
+    public Cursor getCountBasket(){
+        Cursor cursor = sqLiteDatabase.rawQuery(EjevikaHelper.TABLE_BASKET_COUNT,null);
+        Log.d("test",EjevikaHelper.TABLE_BASKET_COUNT);
+        return cursor;
+    }
+
     public Cursor readCategory(){
         Cursor cursor = sqLiteDatabase.query(EjevikaHelper.TABLE_CATEGORIES,null,null,null,null,null,null);
         return cursor;
@@ -205,7 +232,7 @@ public class DBEjevika {
             sqLiteDatabase.execSQL(EjevikaHelper.CREATE_PRODUCTS_TABLE);
             sqLiteDatabase.execSQL(EjevikaHelper.CREATE_BASKET_TABLE);
             Log.d(LOG_DB_TAG, EjevikaHelper.CREATE_CATEGORIES_TABLE);
-            Log.d(LOG_DB_TAG,EjevikaHelper.CREATE_PRODUCTS_TABLE);
+            Log.d(LOG_DB_TAG, EjevikaHelper.CREATE_PRODUCTS_TABLE);
             Log.d(LOG_DB_TAG, EjevikaHelper.CREATE_BASKET_TABLE);
         }catch (SQLException e){
             Log.d(LOG_DB_TAG,"exception_ "+e.getMessage());
@@ -251,6 +278,7 @@ public class DBEjevika {
                 COLUMN_BASKET_PRODUCT_PRICE+" INTEGER, "+
                 COLUMNT_BASKET_PRODUCT_COUNT+" INTEGER);";
         public static final String DROP_TABLE_BASKET = "DROP TABLE IF EXISTS "+ TABLE_BASKET;
+        public static final String TABLE_BASKET_COUNT = "SELECT count(*), sum("+COLUMN_BASKET_PRODUCT_PRICE+") as sum FROM "+TABLE_BASKET;
 /**********************************************************************************************/
 
         private static final String DB_NAME = "ejevika_db";

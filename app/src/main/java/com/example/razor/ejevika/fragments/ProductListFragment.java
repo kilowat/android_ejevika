@@ -1,5 +1,7 @@
 package com.example.razor.ejevika.fragments;
 
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.razor.ejevika.MyApplication;
 import com.example.razor.ejevika.R;
+import com.example.razor.ejevika.acitvities.MainActivity;
 import com.example.razor.ejevika.adapters.AdapterProduct;
 import com.example.razor.ejevika.callbacks.ProductLoadListener;
 import com.example.razor.ejevika.database.DBEjevika;
@@ -49,6 +52,7 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     protected long sectionId = -1;
     protected ArrayList<Product> products = new ArrayList<>();
     protected SwipeRefreshLayout swipeRefreshLayout;
+    public CoordinatorLayout coordinatorLayout;
 
     public static final String PRODUCTS = "products";
     public Basket basket = Basket.getInstance();
@@ -65,6 +69,7 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
         recyclerView.setAdapter(adapterProduct);
         adapterProduct.setListener(this);
 
+        coordinatorLayout = (CoordinatorLayout) getActivity().findViewById(R.id.coordinator);
 
         swipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipeProducts);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -74,6 +79,8 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
         } else {
             getLoaderManager().initLoader(LoaderProduct.LOADER_PRODUCT_ID, args, this).forceLoad();
         }
+
+
         return v;
     }
 
@@ -131,7 +138,16 @@ public class ProductListFragment extends Fragment implements ProductLoadListener
     @Override
     public void onCartAddClick(View v, Product product) {
         Toast.makeText(getActivity(), product.getName() + "Добавлен в корзину", Toast.LENGTH_SHORT).show();
-        basket.add(product.getId());
+        basket.add(product,1);
         ArrayList<BasketItem> basketItems = basket.getProducts();
+        if(basketItems.size()>0){
+            double basketItem = basketItems.get(0).getProductPrice();
+            Log.d("test","price "+basketItem);
+        }
+
+
+        basket.showSnakeBar(coordinatorLayout, basket.getCount(), basket.getSumm());
+
+
     }
 }
